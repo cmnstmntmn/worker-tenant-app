@@ -1,0 +1,23 @@
+name: Build
+on:
+  push:
+    branches:
+      - main
+      - develop
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+    name: Deploy
+    steps:
+      - uses: actions/checkout@v4
+      - run: pnpm install
+      - name: Set environment variables
+        run: |
+          echo $GITHUB_REF
+          echo $GITHUB_SHA
+      - run: pnpm run build
+      - name: Deploy
+        uses: cloudflare/wrangler-action@v3
+        with:
+          apiToken: ${{ secrets.CLOUDFLARE_API_TOKEN }}
+          command: deploy --env=${{ github.ref_name }} --minify --var GITHUB_REF:${{ github.ref_name }} GITHUB_SHA:${{ github.sha }}

@@ -1,0 +1,26 @@
+#:schema node_modules/wrangler/config-schema.json
+name = "worker-landing"
+compatibility_date = "2024-11-27"
+compatibility_flags = ["nodejs_compat"]
+main = "./dist/_worker.js"
+assets = { directory = "./dist", binding = "ASSET" }
+
+# Workers Logs
+# Docs: https://developers.cloudflare.com/workers/observability/logs/workers-logs/
+# Configuration: https://developers.cloudflare.com/workers/observability/logs/workers-logs/#enable-workers-logs
+[observability]
+enabled = true
+
+[env.main]
+name = "worker-landing"
+workers_dev = false
+routes = [
+    { zone_name = "greatoutdoors.live", pattern = "greatoutdoors.live/*" },
+]
+
+[env.develop]
+name = "worker-landing-develop"
+workers_dev = false
+routes = [
+    { zone_name = "greatoutdoors.live", pattern = "dev.greatoutdoors.live/*" },
+]
